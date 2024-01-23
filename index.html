@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tic Tac Toe</title>
+        <style>
+            body{
+                background-color: aqua;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                overflow: hidden;
+            }
+            h1{
+                text-shadow: 2px 2px red, 4px 4px violet;
+                font-size: 50px;
+            }
+            .board{
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                width: 250px;
+            }
+            .cell{
+                width: 75px;
+                height: 75px;
+
+                background-color: blueviolet;
+                color: white;
+
+                font-weight: bolder;
+                font-size: xx-large;
+                font-family: Arial, Helvetica, sans-serif;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .reset{
+                width: 150px;
+                height: 50px;
+                background-color: red;
+                color: white;
+                font-size: large;
+                font-weight: bold;
+                border:0;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Tic Tac Toe</h1>
+        <div class="board">
+            <div class="cell" data-index="0" onclick="clicked(event)"></div>
+            <div class="cell" data-index="1" onclick="clicked(event)"></div>
+            <div class="cell" data-index="2" onclick="clicked(event)"></div>
+            <div class="cell" data-index="3" onclick="clicked(event)"></div>
+            <div class="cell" data-index="4" onclick="clicked(event)"></div>
+            <div class="cell" data-index="5" onclick="clicked(event)"></div>
+            <div class="cell" data-index="6" onclick="clicked(event)"></div>
+            <div class="cell" data-index="7" onclick="clicked(event)"></div>
+            <div class="cell" data-index="8" onclick="clicked(event)"></div>
+        </div>
+        <h2 id="status">Player X's turn</h2>
+        
+        <button class="reset" onclick="location.reload()">Reset Game</button>
+        <script>
+            var board = document.getElementsByClassName("board");
+            var cell = document.querySelectorAll(".cell");
+            const status = document.getElementById("status");
+            var current = 'X';
+            var game = ['','','','','','','','',''];
+            var playing = true;
+
+            function clicked(event){
+                const clicked = event.target;
+                const index = clicked.dataset.index;
+                if(game[index] === '' && playing){
+                    game[index] = current;
+                    clicked.textContent = current;
+
+                    if(checkWin()){
+                        status.textContent = `Player ${current} wins!`;
+                        playing = false;
+                    }else if(game.every(cell =>cell!== '')){
+                        status.textContent = `It's a Tie`;
+                        playing = false;
+                        alert("It's a tie round");
+                    }else{
+                        if(current === 'X'){
+                            current = 'O';
+                            status.textContent  = `Player O's turn`;
+                            cell.forEach(element =>{
+                                element.style.backgroundColor = "blue";
+                            });
+                        }else{
+                            current = 'X';
+                            status.textContent  = `Player X's turn`;
+                            cell.forEach(element =>{
+                                element.style.backgroundColor = "blueviolet";
+                            });
+                        }
+                    }
+
+                }
+            }
+                /* Board index view:
+                            0   1   2
+                            3   4   5
+                            6   7   8
+                */
+                function checkWin(){
+                    const winPatterns = [
+                        [0,1,2], [3,4,5], [6,7,8], //row condition
+                        [0,3,6],[1,4,7],[2,5,8], // column condition
+                        [0,4,8], [2,4,6] //diagonal condition
+                    ];
+
+                    return winPatterns.some(pattern => {
+                        const [a,b,c] = pattern;
+                        if(game[a] !== '' && game[a] === game[b] && game[a] === game[c]){
+                            for(i=0; i<3 ;i++){
+                                cell[pattern[i]].style.backgroundColor = "red";
+                            }
+                        }
+                        return game[a] !== '' && game[a] === game[b] && game[a] === game[c];
+                    });
+                }
+
+        </script>
+    </body>
+</html>
